@@ -2,6 +2,18 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 
+const nextId = () => {
+  const currentIds = persons.map(person => person.id);
+
+  let newId = null;
+
+  while (newId === null || currentIds.includes(newId)) {
+    newId = Math.floor(Math.random() * (10 ** 6) + 1);
+  }
+
+  return newId;
+};
+
 let persons = [
   {
     "id": 1,
@@ -27,6 +39,15 @@ let persons = [
 
 app.get('/api/persons', (request, response) => {
   response.json(persons);
+});
+
+app.post('/api/persons', (request, response) => {
+  const newContact = request.body;
+  newContact.id = nextId();
+
+  persons = persons.concat(newContact);
+
+  response.json(newContact);
 });
 
 app.get('/api/persons/:id', (request, response) => {
