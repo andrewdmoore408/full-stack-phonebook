@@ -2,6 +2,6 @@ POST http://localhost:3001/api/persons
 Content-Type: application/json
 
 {
-  "name": "Kermit the Frog",
-  "number": "800-RAINBOW"
+  "name": "Miss Piggy",
+  "number": "800-HI-YAAAA"
 }
