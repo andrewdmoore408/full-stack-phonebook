@@ -58,19 +58,28 @@ app.get('/api/persons', (request, response) => {
 });
 
 app.post('/api/persons', (request, response) => {
-  const newContact = request.body;
+  const contactInfo = request.body;
 
-  if (!newContact.name) {
+  if (!contactInfo.name) {
     response.status(400).json({error: 'Name cannot be blank'});
-  } else if (!newContact.number) {
+  } else if (!contactInfo.number) {
     response.status(400).json({ error: 'Number cannot be blank' });
-  } else if (persons.find(person => person.name === newContact.name)) {
+  } else if (persons.find(person => person.name === contactInfo.name)) {
     response.status(400).json({ error: 'Name is already taken' });
   } else {
-    newContact.id = nextId();
-    persons = persons.concat(newContact);
+    const newContact = new Person({
+      name: contactInfo.name,
+      number: contactInfo.number,
+    });
 
-    response.json(newContact);
+    newContact.save().then(savedContact => {
+      response.json(savedContact);
+    });
+
+    // newContact.id = nextId();
+    // persons = persons.concat(newContact);
+
+    // response.json(newContact);
   }
 });
 
