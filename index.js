@@ -58,14 +58,13 @@ app.get('/api/persons/:id', (request, response) => {
 
 app.put('/api/persons/:id', (request, response) => {
   const id = request.params.id;
-  const body = request.body;
+  const { name, number } = request.body;
 
-  const person = {
-    name: body.name,
-    number: body.number,
-  };
-
-  Person.findByIdAndUpdate(id, person, {new: true})
+  Person.findByIdAndUpdate(
+    id,
+    {name, number},
+    {new: true, useValidators: true, context:'query'}
+  )
     .then(updatedPerson => {
       response.json(updatedPerson);
     })
