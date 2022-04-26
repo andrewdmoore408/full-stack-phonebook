@@ -75,11 +75,6 @@ app.post('/api/persons', (request, response) => {
     newContact.save().then(savedContact => {
       response.json(savedContact);
     });
-
-    // newContact.id = nextId();
-    // persons = persons.concat(newContact);
-
-    // response.json(newContact);
   }
 });
 
@@ -96,18 +91,14 @@ app.get('/api/persons/:id', (request, response) => {
   }
 });
 
-app.delete('/api/persons/:id', (request, response) => {
-  const id = Number(request.params.id);
+app.delete('/api/persons/:id', (request, response, next) => {
+  const id = request.params.id;
 
-  const contactToDelete = persons.find(person => person.id === id);
-
-  if (contactToDelete) {
-    persons = persons.filter(person => person.id !== id);
-    response.status(204).end();
-  } else {
-    response.statusMessage = `No contact has id ${id}`;
-    response.status(404).end();
-  }
+  Person.findByIdAndRemove(id)
+    .then(result => {
+      response.status(204).end();
+    })
+    .catch(error => next(error));
 });
 
 app.get('/info', (request, response) => {
@@ -122,6 +113,18 @@ app.get('/info', (request, response) => {
     </p>
   `);
 });
+
+function errorHandler(error, request, response, next) {
+  console.error(error.message);
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' });
+  }
+
+  next(error);
+}
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
