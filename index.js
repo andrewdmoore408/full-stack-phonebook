@@ -79,16 +79,18 @@ app.post('/api/persons', (request, response) => {
 });
 
 app.get('/api/persons/:id', (request, response) => {
-  const id = Number(request.params.id);
+  const id = request.params.id;
 
-  const requestedContact = persons.find(person => person.id === id);
-
-  if (requestedContact) {
-    response.json(requestedContact);
-  } else {
-    response.statusMessage = `No contact has id ${id}`;
-    response.status(404).end();
-  }
+  Person.findById(id)
+    .then(person => {
+      if (person) {
+        response.json(person);
+      } else {
+        response.statusMessage = `Person id#${id} not found`;
+        response.status(404).end();
+      }
+    })
+    .catch(error => next(error));
 });
 
 app.put('/api/persons/:id', (request, response) => {
