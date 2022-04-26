@@ -29,8 +29,6 @@ app.post('/api/persons', (request, response) => {
     response.status(400).json({error: 'Name cannot be blank'});
   } else if (!contactInfo.number) {
     response.status(400).json({ error: 'Number cannot be blank' });
-  } else if (persons.find(person => person.name === contactInfo.name)) {
-    response.status(400).json({ error: 'Name is already taken' });
   } else {
     const newContact = new Person({
       name: contactInfo.name,
