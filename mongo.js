@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
 if (process.argv.length < 5 && process.argv.length !== 3) {
-  console.log("Usage is: node mongo.js <dbPassword> <newContactName> <newContactNumber>");
-  console.log("Or to view all contacts: node mongo.js <dbPassword>");
+  console.log('Usage is: node mongo.js <dbPassword> <newContactName> <newContactNumber>');
+  console.log('Or to view all contacts: node mongo.js <dbPassword>');
   process.exit(1);
 }
 
@@ -18,11 +18,11 @@ const personSchema = new mongoose.Schema({
 
 const Person = mongoose.model('Person', personSchema);
 
-if (process.argv.length == 3) {
+if (process.argv.length === 3) {
   Person.find({})
-    .then(persons => {
+    .then((persons) => {
       console.log('Phonebook:');
-      persons.forEach(person => console.log(`${person.name} ${person.number}`));
+      persons.forEach((person) => console.log(`${person.name} ${person.number}`));
 
       mongoose.connection.close();
     });
@@ -32,13 +32,13 @@ if (process.argv.length == 3) {
     number: process.argv[4],
   });
 
-  newPerson.save().then(result => {
+  // eslint-disable-next-line no-unused-vars
+  newPerson.save().then((result) => {
     console.log(`Added ${newPerson.name} number ${newPerson.number} to phonebook.`);
 
     mongoose.connection.close();
   });
 }
-
 
 // mongoose.connect(url);
 

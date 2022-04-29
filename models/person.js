@@ -4,11 +4,12 @@ const url = process.env.MONGODB_URI;
 console.log('Connecting to ', url);
 
 mongoose.connect(url)
-  .then(_ => {
+  // eslint-disable-next-line no-unused-vars
+  .then((_) => {
     console.log('Connected to DB');
   })
-  .catch(error => {
-    console.log("Error connecting to MongoDB: ", error.message);
+  .catch((error) => {
+    console.log('Error connecting to MongoDB: ', error.message);
   });
 
 const personSchema = new mongoose.Schema({
@@ -21,9 +22,8 @@ const personSchema = new mongoose.Schema({
     type: String,
     minLength: 8,
     validate: {
-      validator: (num) => {
-        return /\d{3}[\.-]\d{3}[\.-]\d{4}/.test(num);
-      },
+      // eslint-disable-next-line no-useless-escape
+      validator: (num) => /\d{3}[\.-]\d{3}[\.-]\d{4}/.test(num),
     },
     required: true,
   },
@@ -31,10 +31,12 @@ const personSchema = new mongoose.Schema({
 
 personSchema.set('toJSON', {
   transform: (document, returnedObj) => {
+    /* eslint-disable */
     returnedObj.id = returnedObj._id.toString(),
     delete returnedObj._id;
     delete returnedObj.__v;
-  }
+    /* eslint-enable */
+  },
 });
 
 module.exports = mongoose.model('Person', personSchema);
